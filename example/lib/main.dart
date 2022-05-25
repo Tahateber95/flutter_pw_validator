@@ -53,6 +53,8 @@ class AppHome extends StatelessWidget {
                     height: 5,
                   ),
                   new FlutterPwValidator(
+                    successAssetName: 'assets/svg/check_icon_green.svg',
+                    failAssetName: 'assets/svg/check_icon_red.svg',
                     controller: controller,
                     minLength: 8,
                     uppercaseCharCount: 2,
