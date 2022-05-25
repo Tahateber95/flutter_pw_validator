@@ -11,12 +11,16 @@ import 'Resource/Strings.dart';
 import 'Utilities/SizeConfig.dart';
 
 class FlutterPwValidator extends StatefulWidget {
+  final String successAssetName;
+  final String failAssetName;
+
   final int minLength,
       normalCharCount,
       uppercaseCharCount,
       numericCharCount,
       specialCharCount;
   final Color defaultColor, successColor, failureColor;
+  final bool success, failure;
   final double width, height;
   final Function onSuccess;
   final Function? onFail;
@@ -24,7 +28,11 @@ class FlutterPwValidator extends StatefulWidget {
   final FlutterPwValidatorStrings? strings;
 
   FlutterPwValidator(
-      {required this.width,
+      {required this.failAssetName,
+      required this.successAssetName,
+      this.success = true,
+      this.failure = false,
+      required this.width,
       required this.height,
       required this.minLength,
       required this.onSuccess,
@@ -156,29 +164,28 @@ class _FlutterPwValidatorState extends State<FlutterPwValidator> {
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          new Flexible(
-            flex: 3,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Iterate through the conditions map values to check if there is any true values then create green ValidationBarComponent.
-                for (bool value in conditionsHelper.getter()!.values)
-                  if (value == true)
-                    new ValidationBarComponent(color: widget.successColor),
+          // new Flexible(
+          //   flex: 3,
+          //   child: new Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       // Iterate through the conditions map values to check if there is any true values then create green ValidationBarComponent.
+          //       for (bool value in conditionsHelper.getter()!.values)
+          //         if (value == true)
+          //           new ValidationBarComponent(color: widget.successColor),
 
-                // Iterate through the conditions map values to check if there is any false values then create red ValidationBarComponent.
-                for (bool value in conditionsHelper.getter()!.values)
-                  if (value == false)
-                    new ValidationBarComponent(color: widget.defaultColor)
-              ],
-            ),
-          ),
+          //       // Iterate through the conditions map values to check if there is any false values then create red ValidationBarComponent.
+          //       for (bool value in conditionsHelper.getter()!.values)
+          //         if (value == false)
+          //           new ValidationBarComponent(color: widget.defaultColor)
+          //     ],
+          //   ),
+          // ),
           new Flexible(
-            flex: 7,
+            // flex: 7,
             child: new Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                 //Iterate through the condition map entries and generate new ValidationTextWidget for each item in Green or Red Color
                 children: conditionsHelper.getter()!.entries.map((entry) {
                   int? value;
@@ -193,6 +200,9 @@ class _FlutterPwValidatorState extends State<FlutterPwValidator> {
                   if (entry.key == widget.translatedStrings.specialCharacters)
                     value = widget.specialCharCount;
                   return new ValidationTextWidget(
+                    successAssetName: widget.successAssetName,
+                    failAssetName: widget.failAssetName,
+                    valid: entry.value ? widget.success : widget.failure,
                     color: isFirstRun
                         ? widget.defaultColor
                         : entry.value
